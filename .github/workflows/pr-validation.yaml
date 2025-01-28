@@ -6,10 +6,9 @@ on:
       - develop
 
 jobs:
-  linting:
+  lint:
     name: Lint HTML and CSS
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -17,25 +16,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '16'
 
       - name: Install dependencies
-        run: |
-          npm install -g htmlhint stylelint
+        run: npm install
 
       - name: Lint HTML files
-        run: |
-          htmlhint "**/*.html" --config .htmlhintrc
+        run: npm run lint:html
 
       - name: Lint CSS files
-        run: |
-          stylelint "**/*.css" --config .stylelintrc.json
+        run: npm run lint:css
 
   build:
-    name: Build Static Website
+    name: Build Website
     runs-on: ubuntu-latest
-    needs: linting
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,12 +37,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '16'
 
       - name: Install dependencies
-        run: |
-          npm install -g parcel-bundler
+        run: npm install
 
-      - name: Build project
-        run: |
-          parcel build
+      - name: Build website
+        run: npm run build
